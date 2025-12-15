@@ -36,6 +36,11 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Airflow local metadata
+airflow.db
+airflow.db-shm
+airflow.db-wal
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -205,3 +210,35 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# --- BerlinKart Lakehouse Specifics ---
+
+# Data & Storage
+# Ignore the actual data files (Delta Lake / Parquet)
+data/
+*.parquet
+*.snappy.parquet
+
+# Ignore DuckDB database files (The "Warehouse")
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp
+
+# dbt artifacts
+dbt_packages/
+# logs/ is often caught by *.log, but dbt creates a specific directory
+logs/
+
+# Airflow Standalone files
+standalone_admin_password.txt
+airflow-webserver.pid
+airflow-scheduler.pid
+airflow-triggerer.pid
+
+# Airflow logs directory
+airflow/logs/
+
+# OS & Editor Junk
+.DS_Store
+.vscode/
+*.swp
