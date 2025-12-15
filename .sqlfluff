@@ -1,0 +1,16 @@
+[sqlfluff]
+# We are using DuckDB, which is close to Postgres/Standard SQL
+dialect = duckdb
+# Ignore the 'target' (compiled) folder and packages
+exclude_rules = L031
+ignore = parsing
+
+[sqlfluff:indentation]
+tab_space_size = 4
+
+[sqlfluff:layout:type:comma]
+spacing_before = touch
+line_position = trailing
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = upper

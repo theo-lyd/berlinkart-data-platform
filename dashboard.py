@@ -14,7 +14,7 @@ conn = duckdb.connect('berlinkart_dbt/dev.duckdb', read_only=True)
 # 3. Load Data (Consuming the Marts)
 # Notice we join the Fact and Dimension here for the visualization
 df = conn.sql("""
-    SELECT 
+    SELECT
         f.order_date,
         f.amount_cents / 100.0 as amount_euro,
         f.status,

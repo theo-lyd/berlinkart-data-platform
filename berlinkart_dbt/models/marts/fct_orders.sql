@@ -1,11 +1,11 @@
-with orders as (
-    select * from {{ ref('stg_orders') }}
+WITH orders AS (
+    SELECT * FROM {{ ref('stg_orders') }}
 )
 
-select
+SELECT
     order_id,
     customer_id, -- The Foreign Key
     order_date,
     status,
     amount_cents
-from orders
+FROM orders
