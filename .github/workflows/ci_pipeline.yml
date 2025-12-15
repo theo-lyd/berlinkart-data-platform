@@ -1,0 +1,75 @@
+name: BerlinKart CI Gatekeeper
+
+# Trigger: Run on every push to master or any Pull Request
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+
+jobs:
+  # Job 1: Code Quality (The "Style Police")
+  quality-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install Python (matching your environment)
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 3. Install your specific locked dependencies
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Run the Linter (SQLFluff)
+      # This fails the pipeline if the SQL style is bad
+      - name: Run SQLFluff Lint
+        run: |
+          sqlfluff lint berlinkart_dbt/models/ --dialect duckdb
+
+  # Job 2: dbt Integrity (The "Syntax Check")
+  dbt-compile:
+    needs: quality-checks # Only run if linting passes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      # Critical: Create a temporary dbt profile for CI
+      # We use an in-memory database just to check syntax
+      - name: Configure CI dbt profile
+        run: |
+          mkdir -p ~/.dbt
+          echo "berlinkart_dbt:
+            target: ci
+            outputs:
+              ci:
+                type: duckdb
+                path: ':memory:'" > ~/.dbt/profiles.yml
+
+      - name: Install dbt packages
+        run: |
+          cd berlinkart_dbt
+          dbt deps
+
+      # "dbt compile" checks if your SQL is valid and models link together
+      - name: Verify dbt compilation
+        run: |
+          cd berlinkart_dbt
+          dbt compile
