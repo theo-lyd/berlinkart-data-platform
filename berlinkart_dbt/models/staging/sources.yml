@@ -1,10 +1,27 @@
 version: 2
 
 sources:
-  - name: local_lakehouse
-    schema: main
+  - name: berlinkart  # Matches {{ source('berlinkart', ...) }}
+    schema: main      # The DuckDB schema (usually 'main')
+    description: "The Local Lakehouse. Raw Delta tables residing in the data folder."
+
     tables:
       - name: raw_orders
-        description: "Raw order data in Delta format"
+        description: "Raw order headers (IDs, status, dates)."
         meta:
-          external_location: "../data/delta/raw_orders"
+          external_location: "delta_scan('/workspaces/berlinkart-data-platform/data/delta/raw_orders')"
+
+      - name: raw_customers
+        description: "Raw customer profile data. Used for Snapshots."
+        meta:
+          external_location: "delta_scan('/workspaces/berlinkart-data-platform/data/delta/raw_customers')"
+
+      - name: raw_products
+        description: "Raw product catalog (prices, categories)."
+        meta:
+          external_location: "delta_scan('/workspaces/berlinkart-data-platform/data/delta/raw_products')"
+
+      - name: raw_order_items
+        description: "Individual line items for each order."
+        meta:
+          external_location: "delta_scan('/workspaces/berlinkart-data-platform/data/delta/raw_order_items')"

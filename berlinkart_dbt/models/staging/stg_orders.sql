@@ -1,18 +1,21 @@
 WITH source AS (
-    -- Use the variable we defined in dbt_project.yml
-    SELECT * FROM delta_scan('{{ var("raw_orders_path") }}')
+    -- Now we use the source configuration from sources.yml
+    -- This picks up the absolute path we fixed earlier.
+    SELECT * FROM {{ source('berlinkart', 'raw_orders') }}
 ),
 
 renamed AS (
     SELECT
         order_id,
         customer_id,
-        -- Convert string to actual date object
-        cast(order_date AS date) AS order_date,
-        region,
-        -- Example transformation: Convert EUR to Cents (Integer math is safer)
-        cast(amount * 100 AS integer) AS amount_cents,
-        status
+        status,
+
+        -- Ensure it's a date type
+        CAST(order_date AS date) AS order_date
+
+        -- NOTE: We removed 'amount' and 'region'.
+        -- 'amount' is now calculated in fct_orders (from items).
+        -- 'region/city' is now joined in from dim_customers.
     FROM source
 )
 

@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension with history tracking (SCD Type 2)."
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_products
+    description: "Product catalog normalized."
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_orders
+    description: "Transactional fact table. 1 row per order."
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        tests:
+          - not_null
+          # Referential Integrity Test:
+          # Fails if an order references a customer_id that doesn't exist in the Dimension.
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+      - name: revenue_euro
+        tests:
+          # Business Logic: Revenue should never be negative
+          - dbt_expectations.expect_column_values_to_be_between:
+               arguments:
+                 min_value: 0
+                 max_value: 1000000

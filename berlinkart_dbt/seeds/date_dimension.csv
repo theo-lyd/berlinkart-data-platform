@@ -1,0 +1,6 @@
+date_id,date_day,year,month,month_name,day,quarter,day_of_week
+20240101,2024-01-01,2024,1,January,1,1,Monday
+20240102,2024-01-02,2024,1,January,2,1,Tuesday
+20240103,2024-01-03,2024,1,January,3,1,Wednesday
+20240104,2024-01-04,2024,1,January,4,1,Thursday
+20240105,2024-01-05,2024,1,January,5,1,Friday
