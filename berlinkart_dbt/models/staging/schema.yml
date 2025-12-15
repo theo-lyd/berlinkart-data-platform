@@ -16,3 +16,41 @@ models:
               # "arguments" is now explicitly required for cleaner parsing
               arguments:
                 values: ['placed', 'shipped', 'completed', 'returned', 'processing']
+
+  - name: fct_orders
+    description: "Orders fact table with totals and customer keys."
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        tests:
+          - not_null
+          # Foreign Key Test: Ensures every customer_id here actually exists in the customers table
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+      - name: total_amount
+        tests:
+          - not_null
+
+          # --- OLD LOGIC (Commented Out) ---
+          # --- The Portfolio Test (Statistical Quality Control) ---
+          # "Alert me if the average order value deviates significantly from the norm"
+          # Checks that per-customer spending is within 3 standard deviations of the mean
+          #- dbt_expectations.expect_column_values_to_be_within_n_stdevs:
+              #arguments:
+                #group_by: [customer_id] # Check PER CUSTOMER
+                #sigma_threshold: 3 # 3 Standard Deviations (Sigma)
+
+          # --- NEW LOGIC (Active) ---
+          # Switch to a Business Logic test that handles random data better
+          # "Alert if we see negative values or impossible amounts (>10k)"
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 10000

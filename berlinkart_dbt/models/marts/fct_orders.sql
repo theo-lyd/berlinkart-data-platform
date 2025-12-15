@@ -7,5 +7,5 @@ SELECT
     customer_id, -- The Foreign Key
     order_date,
     status,
-    amount_cents
+    amount_cents / 100.0 AS total_amount
 FROM orders
