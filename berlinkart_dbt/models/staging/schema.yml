@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Cleaned order data with standardized currency and types."
+    columns:
+      - name: order_id
+        description: "Primary key of the order."
+        tests:
+          - unique
+          - not_null
+
+      - name: status
+        tests:
+          - accepted_values:
+              # "arguments" is now explicitly required for cleaner parsing
+              arguments:
+                values: ['placed', 'shipped', 'completed', 'returned', 'processing']

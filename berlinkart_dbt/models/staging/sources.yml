@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: local_lakehouse
+    schema: main
+    tables:
+      - name: raw_orders
+        description: "Raw order data in Delta format"
+        meta:
+          external_location: "../data/delta/raw_orders"
