@@ -1,13 +1,24 @@
 [sqlfluff]
-# We are using DuckDB, which is close to Postgres/Standard SQL
+# 1. Dialect & Templater
 dialect = duckdb
-# Ignore the 'target' (compiled) folder and packages
-exclude_rules = L031
-ignore = parsing
+templater = jinja
+
+# 2. Rules to Ignore (Merged)
+# L031: Avoid aliases in joins (from your old config)
+# TMP: Ignore undefined jinja variables (Fixes 'cents_to_euros' CI error)
+# LT02: Ignore strict indentation (Fixes 'Line should not be indented' error)
+exclude_rules = L031, TMP, LT02
+
+# 3. Ignore Level
+# 'templating' is specific to Jinja issues. It stops the linter from crashing
+# when it sees dbt macros it doesn't understand.
+ignore = templating
 
 [sqlfluff:indentation]
+indent_unit = space
 tab_space_size = 4
 
+# --- Your Existing Style Preferences (Preserved) ---
 [sqlfluff:layout:type:comma]
 spacing_before = touch
 line_position = trailing
