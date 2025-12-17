@@ -24,10 +24,10 @@ SELECT
     o.status,
 
     -- Metrics
-    COALESCE(agg.num_items, 0) as quantity,
+    COALESCE(agg.num_items, 0) AS quantity,
 
     -- Use the Macro for consistent money handling
-    {{ cents_to_euros('COALESCE(agg.total_revenue_cents, 0)') }} as revenue_euro
+    {{ cents_to_euros('COALESCE(agg.total_revenue_cents, 0)') }} AS revenue_euro
 
 FROM orders AS o
 LEFT JOIN order_aggregates AS agg ON o.order_id = agg.order_id

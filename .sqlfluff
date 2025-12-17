@@ -7,7 +7,7 @@ templater = jinja
 # L031: Avoid aliases in joins (from your old config)
 # TMP: Ignore undefined jinja variables (Fixes 'cents_to_euros' CI error)
 # LT02: Ignore strict indentation (Fixes 'Line should not be indented' error)
-exclude_rules = L031, TMP, LT02
+exclude_rules = L031, LT02
 
 # 3. Ignore Level
 # 'templating' is specific to Jinja issues. It stops the linter from crashing
