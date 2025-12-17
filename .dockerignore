@@ -1,0 +1,6 @@
+berlinkart_dbt/dbt_packages/
+berlinkart_dbt/target/
+berlinkart_dbt/logs/
+__pycache__/
+.git/
+.venv/
